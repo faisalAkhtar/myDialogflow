@@ -1,52 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<meta content="width=device-width, initial-scale=1.0" name="viewport">
-	<title>Faisal's App</title>
-	<link rel="icon" href="favicon.ico">
-	<link rel="stylesheet" href="css/app.css">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.1/css/all.css">
-	<script src="https://www.gstatic.com/firebasejs/live/3.1/firebase.js"></script>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Faisal's App</title>
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.1/css/all.css">
+  <script src="https://www.gstatic.com/firebasejs/live/3.1/firebase.js"></script>
 </head>
 
 <body>
-<!--	People	-->
+<!--  People  -->
 <div class="peopleDiv peopleDivSmall">
-	<div class="peopleMsgs">
-		<img id="loading" src="img/loading.gif" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
-	</div>
-	<div class="loggedSignOut" id="logOut">Sign Out</div>
+  <div class="peopleMsgs">
+    <img id="loading" src="img/loading.gif" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+  </div>
+  <div class="loggedSignOut" id="logOut">Sign Out</div>
 </div>
 
-<!--	Messages	-->
+<!--  Messages  -->
 <div id="cover"></div>
 <div class="messageDivSmall title-bar">
-	<i class="fas fa-arrow-left" onclick="goBack('peopleDiv')"></i>
-	<p class="title">User</p>
-<!--	<i class="fas fa-ellipsis-v" onclick="openMenu('messageDiv')"></i>	-->
+  <i class="fas fa-arrow-left" onclick="goBack('peopleDiv')"></i>
+  <p class="title">User</p>
+<!--  <i class="fas fa-ellipsis-v" onclick="openMenu('messageDiv')"></i>  -->
 </div>
 
 <div class="messageDivSmall messages">
 </div>
 
 <div class="messageDivSmall sendTxt">
-	<div style="position:relative;height:100%;">
-		<textarea type="text" id="txtMsg" placeholder="Send text..." readonly></textarea>
-		<button onclick="sendTxtMsg()" id="sndBtn"><img src="img/send.png"></button>
-	</div>
+  <div style="position:relative;height:100%;">
+    <textarea type="text" id="txtMsg" placeholder="Send text..." readonly></textarea>
+    <button onclick="sendTxtMsg()" id="sndBtn"><img src="img/send.png"></button>
+  </div>
 </div>
 
-<!--	Logged Div	-->
+<!--  Logged Div  -->
 <div class="loggedDiv loggedDivSmall">
-	<div class="loggedProfile">
-		<i class="fas fa-arrow-left" onclick="goBack()"></i>
-		<img class="loggedDP">
-		<text class="loggedName"></text>
-	</div>
-	<div class="loggedSignOut" id="logOut">
-		<i class="fas fa-sign-out-alt"></i> Sign Out
-	</div>
+  <div class="loggedProfile">
+    <i class="fas fa-arrow-left" onclick="goBack()"></i>
+    <img class="loggedDP">
+    <text class="loggedName"></text>
+  </div>
+  <div class="loggedSignOut" id="logOut">
+    <i class="fas fa-sign-out-alt"></i> Sign Out
+  </div>
 </div>
 <script src="js/app-small-handler.js"></script>
 <script src="js/app-handler.js"></script>
