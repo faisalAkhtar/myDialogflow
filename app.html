@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Faisal's App</title>
-  <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="css/app.css">
+  <link rel="icon" href="/static/img/favicon.ico">
+  <link rel="stylesheet" href="/static/css/app.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.1/css/all.css">
   <script src="https://www.gstatic.com/firebasejs/live/3.1/firebase.js"></script>
 </head>
@@ -14,7 +14,7 @@
 <!--  People  -->
 <div class="peopleDiv peopleDivSmall">
   <div class="peopleMsgs">
-    <img id="loading" src="img/loading.gif" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+    <img id="loading" src="/static/img/loading.gif" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
   </div>
   <div class="loggedSignOut" id="logOut">Sign Out</div>
 </div>
@@ -33,7 +33,7 @@
 <div class="messageDivSmall sendTxt">
   <div style="position:relative;height:100%;">
     <textarea type="text" id="txtMsg" placeholder="Send text..." readonly></textarea>
-    <button onclick="sendTxtMsg()" id="sndBtn"><img src="img/send.png"></button>
+    <button onclick="sendTxtMsg()" id="sndBtn"><img src="/static/img/send.png"></button>
   </div>
 </div>
 
@@ -48,7 +48,7 @@
     <i class="fas fa-sign-out-alt"></i> Sign Out
   </div>
 </div>
-<script src="js/app-small-handler.js"></script>
-<script src="js/app-handler.js"></script>
+<script src="/static/js/app-small-handler.js"></script>
+<script src="/static/js/app-handler.js"></script>
 </body>
 </html>
