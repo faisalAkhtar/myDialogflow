@@ -1,0 +1,22 @@
+{
+  "name": "my-dialogflow",
+  "version": "1.0.0",
+  "description": "Implementing my version of operator side handler",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faisalAkhtar/myDialogflow.git"
+  },
+  "author": "faisalAkhtar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/faisalAkhtar/myDialogflow/issues"
+  },
+  "homepage": "https://github.com/faisalAkhtar/myDialogflow#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
