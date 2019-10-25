@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="author" content="Faisal Akhtar">
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+	<meta name="keywords" content="Social media, Ramanujan College, Ramanujan, Faisal Akhtar, Faisal, Akhtar, Facebook, Instagram, Twitter, Messenger">
+	<meta name="title" content="Faisal's social media app">
+	<meta name="description" content="Facebook @faisal.akhtar | Instagram @faisall | Twitter @ faisallakhtarr">
+
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://faisalakhtar.in/myApp/">
+	<meta property="og:site_name" content="Faisal's app">
+	<meta property="og:title" content="Faisal's social media app">
+	<meta property="og:description" content="Facebook @faisal.akhtar | Instagram @faisall | Twitter @ faisallakhtarr">
+	<meta property="og:type" content="website">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:url" content="https://faisalakhtar.in/myApp/">
+	<meta name="twitter:site_name" content="Faisal's social media app">
+	<meta name="twitter:title" content="Faisal's app">
+	<meta name="twitter:description" content="Facebook @faisal.akhtar | Instagram @faisall | Twitter @ faisallakhtarr">
+	<meta name="twitter:type" content="website">
+	<meta name="twitter:image:alt" content="Faisal's app logo">
+	<title>Faisal's App</title>
+	<link rel="icon" href="favicon.ico">
+	<link rel="stylesheet" href="css/app.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.1/css/all.css">
+	<script src="https://www.gstatic.com/firebasejs/live/3.1/firebase.js"></script>
+</head>
+
+<body>
+<!--	People	-->
+<div class="peopleDiv peopleDivSmall">
+	<div class="peopleMsgs">
+	</div>
+	<div class="loggedSignOut" id="logOut">
+		<i class="fas fa-sign-out-alt"></i> Sign Out
+	</div>
+</div>
+
+<!--	Messages	-->
+<div class="messageDivSmall title-bar">
+	<i class="fas fa-arrow-left" onclick="goBack('peopleDiv')"></i>
+	<div class="dp">
+		<img src="img/default.jpg" class="dpImg">
+		<span class="online-mark">
+			<span class="online"></span>
+		</span>
+	</div>
+	<p class="title">User</p>
+<!--	<i class="fas fa-ellipsis-v" onclick="openMenu('messageDiv')"></i>	-->
+</div>
+
+<div class="messageDivSmall messages">
+</div>
+
+<div class="messageDivSmall sendTxt">
+	<div style="position:relative;height:100%;">
+		<textarea type="text" id="txtMsg" placeholder="Send text..." readonly></textarea>
+		<button onclick="sendTxtMsg()" id="sndBtn"><i class="fas fa-paper-plane"></i></button>
+	</div>
+</div>
+
+<!--	Logged Div	-->
+<div class="loggedDiv loggedDivSmall">
+	<div class="loggedProfile">
+		<i class="fas fa-arrow-left" onclick="goBack()"></i>
+		<img class="loggedDP">
+		<text class="loggedName"></text>
+	</div>
+	<div class="loggedSignOut" id="logOut">
+		<i class="fas fa-sign-out-alt"></i> Sign Out
+	</div>
+</div>
+<script src="js/app-small-handler.js"></script>
+<script src="js/app-handler.js"></script>
+</body>
+</html>
