@@ -1,0 +1,91 @@
+@font-face {font-family:"Montserrat"; src: url('fonts/Montserrat-Regular.ttf');}
+body {
+	margin: 0;
+	padding: 10% 0;
+	font-family: Montserrat;
+}
+
+div {
+	margin: 2% 0 0 25%;
+	display: block;
+}
+
+input, button {
+	font-size: 100%;
+	border: none;
+	padding: 1% 2%;
+	font-family: Montserrat;
+	transition-duration: 0.4s;
+	resize: none;
+}
+
+input {
+	border-bottom: 2px solid purple;
+	width: 50%;
+	box-sizing: border-box;
+	border-radius: 25px;
+}
+
+button {
+	cursor: pointer;
+	border: 2px solid purple;
+	float: left;
+	width: 15%;
+	margin-right: 2%;
+	box-sizing: border-box;
+	background-color: purple;
+	color: white;
+}
+
+button:nth-child(3) {
+	background-color: unset;
+	color: purple;
+}
+
+button:hover,
+button:focus {
+	background-color: white;
+	color: purple;
+	outline: none;
+	border-radius: 25px;
+}
+
+button:hover:nth-child(3),
+button:focus:nth-child(3),
+input:focus {
+	background-color: purple;
+	color: white;
+	outline: none;
+}
+
+.hide {
+	display: none;
+}
+
+@media screen and (max-width:1279px) {
+	body {
+		padding: 50% 0;
+	}
+	div {
+		margin: 10%;
+	}
+	input, button {
+		padding: 5%;
+	}
+	input {
+		width: 100%;
+		font-size: 90%;
+	}
+	button {
+		width: 33.33%;
+		font-size: 80%;
+		margin-right: 5%;
+	}
+}
+
+::placeholder {
+	color: purple;
+}
+::selection {
+	background-color: purple;
+}
