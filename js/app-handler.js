@@ -1,5 +1,4 @@
 let handleA = [];
-let handleB = [];
 (function() {
 	var firebaseConfig = {
 		apiKey: "AIzaSyDtS9Js6uGELqIN5ZaI4C8-FN45NQP3eXc",
@@ -35,9 +34,6 @@ function initApp(uid) {
 			var pplDiv = document.createElement("div");
 				pplDiv.setAttribute("class","people "+snap.key);
 				pplDiv.setAttribute("onclick","opnMsgs('"+snap.key+"')");
-			var pplImg = document.createElement("img");
-				pplImg.src = snap.child('photoURL').val();
-				pplImg.setAttribute("class","peopleImg");
 			var pplTxt = document.createElement('text');
 				pplTxt.setAttribute("class","peopleName");
 				var pplTxtName = document.createElement("div");
@@ -49,25 +45,28 @@ function initApp(uid) {
 //						pplTxtTxt.innerHTML = "Kya kr rha hh be!!!!!!!!!!!!!!";
 				pplTxt.appendChild(pplTxtName);
 //					pplTxt.appendChild(pplTxtTxt);
-			pplDiv.appendChild(pplImg);
 			pplDiv.appendChild(pplTxt);
 		ppl.appendChild(pplDiv);
+		if(document.getElementById('loading')!=null){
+			document.getElementById('loading').parentNode.removeChild(document.getElementById('loading'));
+		}
 	});
 }
 
 function opnMsgs(sndrID) {
+	if(document.getElementById('cover')!=null){
+		document.getElementById('cover').parentNode.removeChild(document.getElementById('cover'));
+	}
 	var checkBool=0;
 	const dbRef = firebase.database().ref();
 	const usrID = firebase.auth().currentUser.uid;
 	document.getElementById('txtMsg').removeAttribute("readonly");
 
 	var title = document.getElementsByClassName('title')[0];
-	var dp = document.getElementsByClassName('dpImg')[0];
 	document.getElementById('txtMsg').value = '';
 	dbRef.child('customers').once('value', snap => {
-	title.innerHTML = snap.child(sndrID).child('fName').val();
+	title.innerHTML = snap.child(sndrID).child('fName').val() + " <span id=\"sub-title\">" + snap.child(sndrID).child('lName').val() + "</span>";
 		title.id = snap.child(sndrID).key;
-	dp.src = snap.child(sndrID).child('photoURL').val();
 	});
 
 	var msgsDiv = document.getElementsByClassName('messages')[0];
@@ -85,10 +84,8 @@ function opnMsgs(sndrID) {
 	let fn = dbRef.child('messageBox').on('child_added', snap=> {
 		if((snap.child('to').val()==usrID || snap.child('to').val()==sndrID) && (snap.child('from').val()==sndrID || snap.child('from').val()==usrID)) {
 			var newDiv = document.createElement("div");
-			newDiv.id = snap.key;
 			if(snap.child('from').val()==usrID) {
 				newDiv.setAttribute("class", "container sender");
-				newDiv.setAttribute("onclick","msgOptions('"+snap.key+"')");
 			} else {
 				newDiv.setAttribute("class", "container");
 			}
@@ -104,13 +101,6 @@ function opnMsgs(sndrID) {
 		}
 	});
 	handleA.push(fn);
-
-	handleB.forEach(fn2 => dbRef.child('messageBox').off('child_removed',fn2));
-	let fn2 = dbRef.child('messageBox').on('child_removed', snap=> {
-		if(document.getElementById(snap.key)!=null)
-			document.getElementById(snap.key).remove();
-	});
-	handleB.push(fn2);
 
 	for (var i = 0; i < document.getElementsByClassName('people').length; i++) {
 		document.getElementsByClassName('people')[i].classList.remove("selected");
@@ -153,52 +143,5 @@ function sendTxtMsg(arg) {
 		});
 		document.getElementById('txtMsg').value = "";
 		document.getElementById('txtMsg').focus();
-	}
-}
-
-function msgOptions(msgID) {
-	document.getElementsByClassName('messages')[0].style.overflowY = "hidden";
-	document.getElementById('txtMsg').setAttribute("readonly","true");
-	var a = document.createElement("div");
-	a.setAttribute("class","overlay");
-	a.setAttribute("style","height:"+document.getElementsByClassName('messages')[0].scrollHeight+"px");
-	a.setAttribute("onclick","hideMsgOptions()");
-	var b = document.createElement("div");
-	b.setAttribute("class","overlayMenu");
-	var clH =  document.getElementsByClassName('messages')[0].clientHeight;
-	var scH = document.getElementsByClassName('messages')[0].scrollHeight;
-	var x = scH-(clH/2)*1.1;
-	b.setAttribute("style","top:"+x+"px");
-	b.setAttribute("onclick","deleteMsg('"+msgID+"')");
-	var c = document.createElement("p");
-	c.innerHTML = "Unsend this message";
-	b.appendChild(c);
-	a.appendChild(b);
-	document.getElementsByClassName('messages')[0].appendChild(a);
-}
-
-function hideMsgOptions() {
-	document.getElementsByClassName('messages')[0].style.overflowY = "auto";
-	document.getElementById('txtMsg').removeAttribute("readonly");
-	if(document.getElementsByClassName('container')[0]!=null) {
-		document.getElementsByClassName('overlay')[0].remove();
-	}
-}
-
-function deleteMsg(msgID) {
-	firebase.database().ref().child('messageBox').child(msgID).remove();
-	if(document.getElementById(msgID)!=null)
-		document.getElementById(msgID).remove();
-	if(document.getElementsByClassName('container')[0]==null) {
-		var msgsDiv = document.getElementsByClassName('messages')[0];
-		msgsDiv.innerHTML = "";
-			var newDiv = document.createElement("div");
-				newDiv.setAttribute("class", "hiiMsg");
-				newDiv.setAttribute("onclick", "hiiMsg()");
-				var para = document.createElement("p");
-					para.innerHTML = "Send a hii";
-					para.setAttribute("style","color:darkGrey;font-style:italic;text-align:center")
-				newDiv.appendChild(para);
-			msgsDiv.appendChild(newDiv);
 	}
 }

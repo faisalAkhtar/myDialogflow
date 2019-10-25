@@ -16,7 +16,8 @@ body {
 	height:100%;
 	box-sizing:border-box;
 	background-color:#fff;
-	display: block;
+	display:block;
+	z-index:2;
 }
 
 input, textarea, button {
@@ -31,38 +32,18 @@ input:focus {
 }
 
 .peopleMsgs {
-	height:79%;
-	overflow-y:auto
+	height:91.5%;
+	overflow-y:auto;
 }
 
 .people {
 	box-sizing:border-box;
-	padding:20px 7.5px 12.5px 7.5px;
+	padding:12.5% 10%;
 	width:100%;
 	border-bottom: 1px solid #eee;
 /*	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.10),
 							0 6px 20px 0 rgba(0, 0, 0, 0.09);	*/
 	position:relative;
-}
-
-.peopleDivHead {
-	width:100%;
-	position:relative;
-	background-color:#F7F7F7;
-	color:#fff;
-	padding:2%;
-	box-sizing:border-box;
-	min-height:12.5%;
-}
-
-.peopleDivSearch {
-	border:1px solid purple;
-	padding:2% 4%;
-	position:absolute;
-	top:50%;
-	transform:translateY(-50%);
-	width:86%;
-	border-radius:25px;
 }
 
 .selected {
@@ -79,21 +60,12 @@ input:focus {
 	transition-duration: 0.2s;
 }
 
-.peopleImg {
-	width:17.5%;
-	margin:0;
-	border-radius:15px;
-	box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.10),
-						0 6px 20px 0 rgba(0, 0, 0, 0.09);
-}
-
 .peopleName {
 	font-weight: bold;
 	position:absolute;
 	top:50%;
 	transform:translateY(-50%);
-	left:21.5%;
-	width:75%;
+	width:80%;
 	overflow: hidden;
 }
 
@@ -180,10 +152,9 @@ input:focus {
 
 .loggedSignOut {
 	box-sizing:border-box;
-	padding:20px 0;
+	padding:6% 0;
 	height:8.5%;
 	width:100%;
-	border-top:1px solid #eee;
 	position:absolute;
 	bottom:0;
 	background-color:rgba(128,0,128,0.9);
@@ -197,6 +168,17 @@ input:focus {
 .loggedSignOut:hover {
 	transition-duration:0.5s;
 	background-color:rgb(128,0,128);
+}
+
+#cover {
+	height: 100%;
+	top: 0;
+	right: 0;
+	width: 75%;
+	box-sizing: border-box;
+	position: absolute;
+	z-index: 2;
+	background-color: #F7F7F7;
 }
 
 .messages {
@@ -259,41 +241,6 @@ input:focus {
 
 .title-bar .fa-ellipsis-v {
 	right: 5%;
-}
-
-.dp {
-	position: relative;
-	height: 100%;
-	width: 9vh;
-	left: 0%;
-	top: 50%;
-	transform: translateY(-50%);
-}
-
-.dp img {
-	position: absolute;
-	height: 110%;
-	top: 50%;
-	transform: translateY(-50%);
-	border-radius: 15px;
-}
-
-.dp .online-mark {
-	position: absolute;
-	right: 10%;
-	top: 110%;
-	z-index: 1;
-}
-
-.online {
-	top: 100%;
-	transform: translateY(-100%);
-	position: absolute;
-	height: 12px;
-	width: 12px;
-	background-color: #7ADB82;
-	border-radius: 100%;
-	border: 3px solid #fff;
 }
 
 .title {
@@ -371,7 +318,7 @@ input:focus {
 	position: absolute;
 	height: 100%;
 	margin: 0;
-	padding: 2%;
+	padding:1%;
 	background-color: transparent;
 	top: 50%;
 	transform: translateY(-50%);
@@ -379,11 +326,11 @@ input:focus {
 }
 
 #txtMsg {
-	padding:2%;
 	width:92%;
 	overflow-x:hidden;
 	overflow-y:auto;
 	resize: none;
+	color: purple;
 }
 
 #sndBtn {
@@ -393,9 +340,21 @@ input:focus {
 	color: purple;
 }
 
+#sndBtn img {
+	width: 50px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+}
+
 #sndBtn:hover {
 	background-color: purple;
 	color: white;
+}
+
+#sndBtn:hover img {
+	filter: grayscale(100%) invert(100%);
 }
 
 .hidden {
@@ -490,9 +449,6 @@ input:focus {
 	.title-bar .fas {
 		display: block;
 	}
-	.dp {
-		left: 5%;
-	}
 	.peopleDivSearch {
 		width: 80%;
 	}
@@ -508,6 +464,9 @@ input:focus {
 	.peopleDiv, .loggedDiv {
 		z-index: 1;
 	}
+	#cover {
+		display: none;
+	}
 	.messages {
 		padding: 2%;
 		font-size: 80%;
@@ -517,17 +476,11 @@ input:focus {
 	.fas {
 		font-size: 100%
 	}
-	.dp img {
-		height: 90%;
-	}
-	.online {
-		right: 10%;
-	}
-	.dp .online-mark {
-		top: 100%;
-	}
 	.title {
 		font-size: 125%;
+	}
+	#sub-title {
+		display: none;
 	}
 	.container {
 		margin-top: 1%;
@@ -535,6 +488,12 @@ input:focus {
 	}
 	.sendTxt {
 		width: 100%;
+	}
+	#txtMsg {
+		padding: 2%;
+	}
+	#sndBtn img {
+		width: 25px;
 	}
 	.menu {
 		width: 70%;
@@ -550,8 +509,6 @@ input:focus {
 	}
 }
 
-::placeholder { color: purple; }
-::selection { display:none; }
 /* width */
 ::-webkit-scrollbar { width: 8px; }
 /* Track
