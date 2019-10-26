@@ -4,11 +4,11 @@ var app = express();
 app.use('/static', express.static(`${__dirname}/public`));
 
 app.get('/', function(req, res){
-   res.sendFile(`${__dirname}/index.html`);
+   res.sendFile(`${__dirname}/login.html`);
 });
 
 app.get('/operator', function(req, res){
-   res.sendFile(`${__dirname}/app.html`);
+   res.sendFile(`${__dirname}/operator.html`);
 });
 
-app.listen(3000);
+app.listen(6969);
