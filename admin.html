@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="author" content="Faisal Akhtar">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Faisal's App</title>
+  <link rel="icon" href="/static/img/favicon.ico">
+  <script src="https://www.gstatic.com/firebasejs/live/3.1/firebase.js"></script>
+</head>
+
+<body>
+  <h1>ADMIN</h1>
+  <h3>OPERATORS : <span id="op">0</span></h3>
+  <h3>CUSTOMERS : <span id="cu">0</span></h3>
+  <script>
+    (function() {
+      var firebaseConfig = {
+        apiKey: "AIzaSyDtS9Js6uGELqIN5ZaI4C8-FN45NQP3eXc",
+        authDomain: "operatorhandler.firebaseapp.com",
+        databaseURL: "https://operatorhandler.firebaseio.com",
+        projectId: "operatorhandler",
+        storageBucket: "operatorhandler.appspot.com"
+      };
+      firebase.initializeApp(firebaseConfig);
+      var i=j=0;
+      var pre;
+      const dbRef = firebase.database().ref();
+      dbRef.child('operators').on('child_added', snap => {
+        if(snap.child('lName').val()!=null) {                                               // TO CHECK ONLINE LATER ON
+          i++;
+          document.getElementsByTagName('body')[0].append("\tOPERATOR-"+i+"\n");
+          pre=document.createElement('pre');
+          pre.innerHTML = JSON.stringify(snap.val(),1,1);
+          document.getElementsByTagName('body')[0].append(pre);
+          document.getElementById('op').innerHTML=i;
+        }
+      });
+      dbRef.child('customers').on('child_added', snap => {
+        document.getElementsByTagName('body')[0].append("\tCUSTOMER-"+(++j)+"\n");
+        pre=document.createElement('pre');
+        pre.innerHTML = JSON.stringify(snap.val(),1,1);
+        document.getElementsByTagName('body')[0].append(pre);
+        document.getElementById('cu').innerHTML=j;
+      });
+    }());
+  </script>
+</body>
+</html>
