@@ -10,6 +10,13 @@ let handleA = [];
   firebase.initializeApp(firebaseConfig);
   const btnLogout = document.getElementById('logOut');
   btnLogout.addEventListener('click', e=> {
+    let uid = document.getElementsByClassName('loggedProfile')[0].id;
+    console.log(uid);
+    firebase.database().ref().child('operators').child(uid).update({
+      "online" : false
+    }, (err)=>{
+      if(err) console.log(err);
+    });
     firebase.auth().signOut();
   });
   firebase.auth().onAuthStateChanged(firebaseUser => {
@@ -24,6 +31,11 @@ let handleA = [];
 function initApp(uid) {
   document.getElementsByClassName('peopleMsgs')[0].innerHTML = "";
   const dbRef = firebase.database().ref();
+  dbRef.child('operators').child(uid).update({
+    "online" : true
+  }, (err)=>{
+    if(err) console.log(err);
+  });
   dbRef.child('operators').child(uid).once('value', snap => {
     document.getElementsByClassName('loggedProfile')[0].id = snap.key;
 //    document.getElementsByClassName('loggedName')[0].innerHTML = snap.child('fName').val() + " " + snap.child('lName').val();
