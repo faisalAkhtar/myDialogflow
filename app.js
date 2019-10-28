@@ -29,7 +29,7 @@ database.child('operators').on('child_added',snap=>{
 			sendLog(snap,'online',0);
 			appLogs()
 		} else {
-			activeOperators.deleteOperator(snap.key);
+//			activeOperators.deleteOperator(snap.key);
 			sendLog(snap,'offline',0);
 			appLogs()
 		}
