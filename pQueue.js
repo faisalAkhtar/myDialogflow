@@ -53,6 +53,9 @@ class PQueue {
             break
          }
       }
+      for (var i = 0; i < returnValue.customers.length; i++) {
+         this.assignCustomer(returnValue.customers[i]);
+      }
       return returnValue
    }
 
@@ -62,8 +65,16 @@ class PQueue {
       this.enqueue(operator.operator,operator.customers,++(operator.priority))
    }
 
-   deleteCustomer(operator,customer) {
-      let Operator=this.deleteOperator(operator)
+   deleteCustomer(customer) {
+      var Operator
+      for (var i = 0; i < this.operators.length; i++) {
+         for (var j = 0; j < this.operators[i].customers.length; j++) {
+            if(this.operators[i].customers[j]==customer) {
+               Operator=this.deleteOperator(this.operators[i].operator)
+               break
+            }
+         }
+      }
       for (var i=0;i<Operator.customers.length;i++) {
          if(Operator.customers[i]==customer) {
             Operator.customers.splice(i,1)
@@ -163,7 +174,7 @@ console.log('printPQueue(): '+faisal.printPQueue());
 console.log('printCustomers("Stark"): '+faisal.printCustomers("Stark"));
 console.log('printCustomers("Banner"): '+faisal.printCustomers("Banner"));
 
-faisal.deleteCustomer("Stark","faisal")
+faisal.deleteCustomer("faisal")
 console.log('printPQueue(): '+faisal.printPQueue());
 console.log('printCustomers("Stark"): '+faisal.printCustomers("Stark"));
 */
