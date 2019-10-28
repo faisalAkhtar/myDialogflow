@@ -3,3 +3,6 @@ node_modules/
 
 # Ignoring operatorhandler-export file
 operatorhandler-export.json
+
+# Ignoring logs file
+logs.txt
