@@ -80,7 +80,7 @@ function opnMsgs(sndrID) {
 
 	var title = document.getElementsByClassName('title')[0];
 	document.getElementById('txtMsg').value = '';
-	dbRef.child('customers').once('value', snap => {
+	dbRef.child('operators').child(usrID).child('customers').once('value', snap => {
 	title.innerHTML = snap.child(sndrID).child('fName').val() + " <span id=\"sub-title\">" + snap.child(sndrID).child('lName').val() + "</span>";
 		title.id = snap.child(sndrID).key;
 	});
