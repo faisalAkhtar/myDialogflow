@@ -57,16 +57,10 @@ database.child('customers').on('child_removed',snap=>{
 	appLogs()
 });
 
-// LOG OF CURRENT SITUATION
-/*
-setTimeout(()=>{
-	appLogs()
-},3000);
-*/
-
+// CUSTOMERS AND OPERATORS LOG
 function appLogs() {
-	let logs="";
-	logs+="Online customers: "+activeCustomers;
+	let logs=getTimestamp(new Date);
+	logs+="\nOnline customers: "+activeCustomers;
 	logs+="\nOnline operators: "+activeOperators.size();
 	logs+='\nOperator queue: '+activeOperators.printPQueue();
 	for (var i = 0; i < activeOperators.operators.length; i++) {
@@ -83,13 +77,24 @@ function appLogs() {
 	});
 }
 
+// TIME OF LOG
+function getTimestamp(date_ob) {
+	let date = ("0" + date_ob.getDate()).slice(-2);
+	let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+	let year = date_ob.getFullYear();
+	let hours = date_ob.getHours();
+	let minutes = date_ob.getMinutes();
+	let seconds = date_ob.getSeconds();
+	return year+"-"+month+"-"+date+" "+hours+":"+minutes+":"+seconds
+}
+
 // CONNECTION LOGS
 function sendLog(snap,state,op) {
-	let logs="";
+	let logs=getTimestamp(new Date);
 	if(op==0)
-		logs+='Operator '+snap.child('fName').val()+' '+snap.child('lName').val()+' is '+state+' now!';
+		logs+='\nOperator '+snap.child('fName').val()+' '+snap.child('lName').val()+' is '+state+' now!';
 	else
-		logs+='Customer '+snap.child('fName').val()+' '+snap.child('lName').val()+' '+state;
+		logs+='\nCustomer '+snap.child('fName').val()+' '+snap.child('lName').val()+' '+state;
 	logs+=br;
 	console.log(logs);
 	logging.appendFile('logs.txt',"\n"+logs,(err)=>{
@@ -105,8 +110,8 @@ app.get('/operator',(req,res)=>{res.sendFile(`${__dirname}/operator.html`)})
 app.get('/admin',(req,res)=>{res.sendFile(`${__dirname}/admin.html`)})
 
 app.listen(6969,()=>{
-	console.log("Server is live on port 6969*"+br)
-	logging.appendFile('logs.txt',"Server is live on port 6969*"+br,(err)=>{
+	console.log(getTimestamp(new Date)+"\nServer is live on port 6969*"+br)
+	logging.appendFile('logs.txt',getTimestamp(new Date)+"\nServer is live on port 6969*"+br,(err)=>{
 		if(err) throw err
 	});
 })
