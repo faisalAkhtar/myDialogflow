@@ -15,57 +15,64 @@ var firebaseApp = firebase.initializeApp({
 // CONSTANTS
 const br = "\n---------------------------------------------------------------------------";
 const customersList=[];
-const operatorsList = new pQueue();
+const activeOperators=new pQueue();
 
 // GETTING DATABASE REFERENCE
 var database = firebase.database().ref();
-
-// GETTING AVAILABLE CUSTOMERS
-database.child('customers').on('child_added',snap=>{
-	customersList.push(snap.key);
-	sendLog(snap,'escalated',1)
-});
-
-// REMOVING UNAVAILABLE CUSTOMERS
-database.child('customers').on('child_removed',snap=>{
-	for (var i=0;i<customersList.length;i++) {
-		if(customersList[i]==snap.key) {
-			customersList.splice(i,1);
-			break;
-		}
-	}
-	sendLog(snap,'disconnected',1)
-});
 
 // GETTING AVAILABLE OPERATORS
 database.child('operators').on('child_added',snap=>{
 	database.child('operators').child(snap.key).child('online').on('value', snapp => {
 		if(snapp.val()) {
-			operatorsList.enqueue(snap.key,0);
+			activeOperators.addOperator(snap.key);
 			sendLog(snap,'online',0);
+			appLogs()
 		} else {
-			operatorsList.deleteOperator(snap.key);
+			activeOperators.deleteOperator(snap.key);
 			sendLog(snap,'offline',0);
+			appLogs()
 		}
 	});
 });
 
+// DELETING OPERATORS IF DELETED FROM DATABASE
 database.child('operators').on('child_removed',snap=>{
-	database.child('operators').child(snap.key).child('online').on('value', snapp => {
-	});
+	activeOperators.deleteOperator(snap.key)
+});
+
+// GETTING AVAILABLE CUSTOMERS
+database.child('customers').on('child_added',snap=>{
+	activeOperators.assignCustomer(snap.key);
+	sendLog(snap,'escalated',1)
+	appLogs()
+});
+
+// REMOVING UNAVAILABLE CUSTOMERS
+database.child('customers').on('child_removed',snap=>{
+	activeOperators.deleteCustomer(snap.key)
+	sendLog(snap,'disconnected',1)
+	appLogs()
 });
 
 // LOG OF CURRENT SITUATION
+/*
+setTimeout(()=>{
+	appLogs()
+},3000);
+*/
+
 function appLogs() {
 	let logs="";
-	logs+="Online customers: "+customersList.length+'\n';
-	logs+="Online operators: "+operatorsList.size()+'\nCustomer array: [ ';
-	for (var i=0;i<customersList.length;i++) {
-		logs+='#'+customersList[i];
-		if((i+1)!=customersList.length)
-		logs+=', ';
+	logs+="Online customers: "+customersList.length;
+	logs+="\nOnline operators: "+activeOperators.size();
+	logs+='\nOperator queue: '+activeOperators.printPQueue();
+	for (var i = 0; i < activeOperators.operators.length; i++) {
+		logs+='\nOperator('+activeOperators.operators[i].operator+')'+'['+activeOperators.operators[i].customers.length+']'+' : { ';
+		for (var j = 0; j < activeOperators.operators[i].customers.length; j++) {
+			logs+=activeOperators.operators[i].customers[j]+' ';
+		}
+		logs+=' }';
 	}
-	logs+=' ]\nOperator queue: '+operatorsList.printPQueue();
 	logs+=br;
 	console.log(logs);
 }
