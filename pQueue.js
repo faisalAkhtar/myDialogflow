@@ -1,6 +1,7 @@
 class QOperator {
-   constructor(operator, priority) {
+   constructor(operator,customers,priority) {
       this.operator=operator
+      this.customers=customers
       this.priority=priority
    }
 }
@@ -14,8 +15,8 @@ class PQueue {
       return !this.operators.length
    }
 
-   enqueue(operator,priority) {
-      var qOperator=new QOperator(operator,priority)
+   enqueue(operator,customers,priority) {
+      var qOperator=new QOperator(operator,customers,priority)
       var flag=false
 
       for (var i=0;i<this.operators.length;i++) {
@@ -35,25 +36,53 @@ class PQueue {
       return this.operators.shift()
    }
 
-   changePriority(flag) {
-      let operator=this.dequeue()
-      if(flag)
-         this.enqueue(operator.operator,++(operator.priority))
-      else
-         this.enqueue(operator.operator,--(operator.priority))
+   size() {
+      return this.operators.length
+   }
+
+   addOperator(operator) {
+      this.enqueue(operator,[],0)
    }
 
    deleteOperator(operator) {
+      var returnValue
       for (var i = 0; i < this.operators.length; i++) {
          if(this.operators[i].operator==operator) {
+            returnValue=this.operators[i]
             this.operators.splice(i,1)
             break
          }
       }
+      return returnValue
    }
 
-   size() {
-      return this.operators.length
+   assignCustomer(customer) {
+      let operator=this.dequeue()
+      operator.customers.push(customer)
+      this.enqueue(operator.operator,operator.customers,++(operator.priority))
+   }
+
+   deleteCustomer(operator,customer) {
+      let Operator=this.deleteOperator(operator)
+      for (var i=0;i<Operator.customers.length;i++) {
+         if(Operator.customers[i]==customer) {
+            Operator.customers.splice(i,1)
+            break
+         }
+      }
+      this.enqueue(Operator.operator,Operator.customers,--(Operator.priority))
+   }
+
+   printCustomers(operator) {
+      let cu='';
+      for (var i = 0; i < this.operators.length; i++) {
+         if(this.operators[i].operator==operator) {
+            for (var j = 0; j < this.operators[i].customers.length; j++) {
+               cu+=' ('+this.operators[i].customers[j]+') '
+            }
+         }
+      }
+      return cu
    }
 
    printPQueue() {
@@ -65,37 +94,76 @@ class PQueue {
    }
 }
 module.exports = PQueue;
+
 /*
 var faisal = new PQueue();
-
 console.log('isEmpty(): '+faisal.isEmpty());
 
-faisal.enqueue("Stark",2);
-faisal.enqueue("Banner",1);
-faisal.enqueue("Rogers",1);
-faisal.enqueue("Romanoff",2);
-faisal.enqueue("Odinson",3);
-console.log('enqueue("Stark",2)\nenqueue("Banner",1)\nenqueue("Rogers",1)\nenqueue("Romanoff", 2)\nenqueue("Odinson",3)')
+let cu1=[]
+cu1.push('Tony')
+cu1.push('Iron Man')
+faisal.enqueue("Stark",cu1,2);
 
-console.log('printPQueue(): '+faisal.printPQueue());
+let cu2=[]
+cu2.push('Bruce')
+cu2.push('The Hulk')
+faisal.enqueue("Banner",cu2,1);
 
-faisal.changePriority(true);
-console.log('changePriority(true)')
+let cu3=[]
+cu3.push('Steve')
+cu3.push('Captain America')
+faisal.enqueue("Rogers",cu3,1);
+
+let cu4=[]
+cu4.push('Natasha')
+cu4.push('Black Widow')
+faisal.enqueue("Romanoff",cu4,2);
+
+let cu5=[]
+cu5.push('Thor')
+faisal.enqueue("Odinson",cu5,3);
 
 console.log('printPQueue(): '+faisal.printPQueue());
 
 console.log('dequeue(): '+faisal.dequeue().operator);
+
+console.log('printPQueue(): '+faisal.printPQueue());
 
 faisal.deleteOperator("Banner");
 console.log('deleteOperator("Banner")');
 
 console.log('printPQueue(): '+faisal.printPQueue());
 
-faisal.enqueue("Barton",2);
+console.log('printCustomers("Romanoff"): '+faisal.printCustomers("Romanoff"));
+console.log('printCustomers("Odinson"): '+faisal.printCustomers("Odinson"));
+console.log('printCustomers("Stark"): '+faisal.printCustomers("Stark"));
+console.log('printCustomers("Rogers"): '+faisal.printCustomers("Rogers"));
+console.log('printCustomers("Banner"): '+faisal.printCustomers("Banner"));
+
+let cu6=[]
+cu6.push('Chris')
+cu6.push('Hawkeye')
+faisal.enqueue("Barton",cu6,2);
 console.log('enqueue("Barton",2)')
 
 console.log('printPQueue(): '+faisal.printPQueue());
+*/
 
-// CHANGE PRIORITY, DELETE, ENQUEUE
-// SIZE, PRINT QUEUE
+/*
+faisal.addOperator("Stark")
+faisal.addOperator("Banner")
+faisal.addOperator("Rogers")
+faisal.addOperator("Romanoff")
+faisal.addOperator("Odinson")
+console.log('printPQueue(): '+faisal.printPQueue());
+
+faisal.assignCustomer("faisal")
+faisal.assignCustomer("akhtar")
+console.log('printPQueue(): '+faisal.printPQueue());
+console.log('printCustomers("Stark"): '+faisal.printCustomers("Stark"));
+console.log('printCustomers("Banner"): '+faisal.printCustomers("Banner"));
+
+faisal.deleteCustomer("Stark","faisal")
+console.log('printPQueue(): '+faisal.printPQueue());
+console.log('printCustomers("Stark"): '+faisal.printCustomers("Stark"));
 */
