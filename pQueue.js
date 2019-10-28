@@ -1,4 +1,4 @@
-const logging = require('fs');
+//const logging = require('fs');
 class QOperator {
    constructor(operator,customers,priority) {
       this.operator=operator
@@ -57,7 +57,7 @@ class PQueue {
       this.enqueue(operator,[],0)
    }
 
-   deleteOperator(operator) {
+   deleteOperator(operator,database) {
       //console.log("\t\tdeleteOperator("+operator+")\n---------------------------------------------------------------------------")
       //logging.appendFile('logs.txt',"\n\t\tdeleteOperator("+operator+")\n---------------------------------------------------------------------------",(err)=>{
          //if(err) throw err
@@ -76,12 +76,12 @@ class PQueue {
          return null
 
       for (var i = 0; i < returnValue.customers.length; i++) {
-         this.assignCustomer(returnValue.customers[i]);
+         this.assignCustomer(returnValue.customers[i],database);
       }
       return returnValue
    }
 
-   assignCustomer(customer) {
+   assignCustomer(customer,database) {
       //console.log("\t\tassignCustomer("+customer+")\n---------------------------------------------------------------------------")
       //logging.appendFile('logs.txt',"\n\t\tassignCustomer("+customer+")\n---------------------------------------------------------------------------",(err)=>{
          //if(err) throw err
@@ -90,9 +90,17 @@ class PQueue {
       if(operator!='EMPTY') {
          operator.customers.push(customer)
          this.enqueue(operator.operator,operator.customers,++(operator.priority))
-         return true
+
+         let x=database.child('operators/'+operator.operator+'/customers').push()
+         x.set({
+            id:customer.key,
+            fName:customer.child('fName').val(),
+            lName:customer.child('lName').val()
+         })
+
+         return operator.operator
       }
-      return false
+      return null
    }
 
    deleteCustomer(customer) {
@@ -100,10 +108,10 @@ class PQueue {
       //logging.appendFile('logs.txt',"\n\t\tdeleteCustomer("+customer+")\n---------------------------------------------------------------------------",(err)=>{
          //if(err) throw err
       //})
-      var Operator
+      var Operator=null
       for (var i = 0; i < this.operators.length; i++) {
          for (var j = 0; j < this.operators[i].customers.length; j++) {
-            if(this.operators[i].customers[j]==customer) {
+            if(this.operators[i].customers[j].key==customer) {
                Operator=this.operators[i]
                this.operators.splice(i,1)
                Operator.customers.splice(j,1)
@@ -113,6 +121,7 @@ class PQueue {
             }
          }
       }
+      return Operator
    }
 
    printCustomers(operator) {
