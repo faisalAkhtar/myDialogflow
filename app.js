@@ -1,8 +1,9 @@
 // FRAMEWORKS AND MODULES USED
-var firebase = require('firebase');
-var express = require('express');
-var app = express();
-var pQueue = require('./pQueue.js');
+const firebase = require('firebase');
+const logging = require('fs');
+const express = require('express');
+const app = express();
+const pQueue = require('./pQueue.js');
 
 // INITIALISING FIREBASE APP
 var firebaseApp = firebase.initializeApp({
@@ -14,7 +15,7 @@ var firebaseApp = firebase.initializeApp({
 
 // CONSTANTS
 const br = "\n---------------------------------------------------------------------------";
-const customersList=[];
+var activeCustomers=0;
 const activeOperators=new pQueue();
 
 // GETTING DATABASE REFERENCE
@@ -44,6 +45,7 @@ database.child('operators').on('child_removed',snap=>{
 database.child('customers').on('child_added',snap=>{
 	activeOperators.assignCustomer(snap.key);
 	sendLog(snap,'escalated',1)
+	activeCustomers++
 	appLogs()
 });
 
@@ -51,6 +53,7 @@ database.child('customers').on('child_added',snap=>{
 database.child('customers').on('child_removed',snap=>{
 	activeOperators.deleteCustomer(snap.key)
 	sendLog(snap,'disconnected',1)
+	activeCustomers--
 	appLogs()
 });
 
@@ -63,7 +66,7 @@ setTimeout(()=>{
 
 function appLogs() {
 	let logs="";
-	logs+="Online customers: "+customersList.length;
+	logs+="Online customers: "+activeCustomers;
 	logs+="\nOnline operators: "+activeOperators.size();
 	logs+='\nOperator queue: '+activeOperators.printPQueue();
 	for (var i = 0; i < activeOperators.operators.length; i++) {
@@ -75,6 +78,9 @@ function appLogs() {
 	}
 	logs+=br;
 	console.log(logs);
+	logging.appendFile('logs.txt',"\n"+logs,(err)=>{
+		if(err) throw err
+	});
 }
 
 // CONNECTION LOGS
@@ -86,6 +92,9 @@ function sendLog(snap,state,op) {
 		logs+='Customer '+snap.child('fName').val()+' '+snap.child('lName').val()+' '+state;
 	logs+=br;
 	console.log(logs);
+	logging.appendFile('logs.txt',"\n"+logs,(err)=>{
+		if(err) throw err
+	});
 }
 
 // SERVER
@@ -94,4 +103,10 @@ app.use('/static', express.static(`${__dirname}/public`));
 app.get('/',(req,res)=>{res.sendFile(`${__dirname}/login.html`)})
 app.get('/operator',(req,res)=>{res.sendFile(`${__dirname}/operator.html`)})
 app.get('/admin',(req,res)=>{res.sendFile(`${__dirname}/admin.html`)})
-app.listen(6969,()=>{console.log("Server is live on port 6969*"+br)})
+
+app.listen(6969,()=>{
+	console.log("Server is live on port 6969*"+br)
+	logging.appendFile('logs.txt',"Server is live on port 6969*"+br,(err)=>{
+		if(err) throw err
+	});
+})
