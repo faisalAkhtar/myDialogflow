@@ -16,6 +16,7 @@ var firebaseApp = firebase.initializeApp({
 // CONSTANTS
 const br = "\n---------------------------------------------------------------------------";
 var activeCustomers=0;
+var waitingCustomersList=[];
 const activeOperators=new pQueue();
 
 // GETTING DATABASE REFERENCE
@@ -27,11 +28,23 @@ database.child('operators').on('child_added',snap=>{
 		if(snapp.val()) {
 			activeOperators.addOperator(snap.key);
 			sendLog(snap,'online',0);
+			while(waitingCustomersList.length!=0) {
+				activeOperators.assignCustomer(waitingCustomersList[0])
+				waitingCustomersList.shift()
+			}
 			appLogs()
 		} else {
-//			activeOperators.deleteOperator(snap.key);
-			sendLog(snap,'offline',0);
-			appLogs()
+			let customersWaiting=activeOperators.deleteOperator(snap.key);
+			if(customersWaiting!=null) {
+				if(activeOperators.length==0 || activeOperators.length==undefined || activeOperators.length==null) {
+					while(customersWaiting.customers.length!=0) {
+						waitingCustomersList.push(customersWaiting.customers[0]);
+						customersWaiting.customers.shift();
+					}
+				}
+				sendLog(snap,'offline',0);
+				appLogs()
+			}
 		}
 	});
 });
@@ -43,7 +56,8 @@ database.child('operators').on('child_removed',snap=>{
 
 // GETTING AVAILABLE CUSTOMERS
 database.child('customers').on('child_added',snap=>{
-	activeOperators.assignCustomer(snap.key);
+	if(!activeOperators.assignCustomer(snap.key))
+		waitingCustomersList.push(snap.key)
 	sendLog(snap,'escalated',1)
 	activeCustomers++
 	appLogs()
@@ -61,6 +75,7 @@ database.child('customers').on('child_removed',snap=>{
 function appLogs() {
 	let logs=getTimestamp(new Date);
 	logs+="\nOnline customers: "+activeCustomers;
+	logs+="\nAwaited customers: "+waitingCustomersList.length;
 	logs+="\nOnline operators: "+activeOperators.size();
 	logs+='\nOperator queue: '+activeOperators.printPQueue();
 	for (var i = 0; i < activeOperators.operators.length; i++) {

@@ -63,13 +63,18 @@ class PQueue {
          //if(err) throw err
       //})
       var returnValue
+      var found=false
       for (var i = 0; i < this.operators.length; i++) {
          if(this.operators[i].operator==operator) {
             returnValue=this.operators[i]
             this.operators.splice(i,1)
+            found=true
             break
          }
       }
+      if(!found)
+         return null
+
       for (var i = 0; i < returnValue.customers.length; i++) {
          this.assignCustomer(returnValue.customers[i]);
       }
@@ -85,7 +90,9 @@ class PQueue {
       if(operator!='EMPTY') {
          operator.customers.push(customer)
          this.enqueue(operator.operator,operator.customers,++(operator.priority))
+         return true
       }
+      return false
    }
 
    deleteCustomer(customer) {
