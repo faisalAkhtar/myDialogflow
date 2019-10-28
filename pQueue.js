@@ -82,8 +82,10 @@ class PQueue {
          //if(err) throw err
       //})
       let operator=this.dequeue()
-      operator.customers.push(customer)
-      this.enqueue(operator.operator,operator.customers,++(operator.priority))
+      if(operator!='EMPTY') {
+         operator.customers.push(customer)
+         this.enqueue(operator.operator,operator.customers,++(operator.priority))
+      }
    }
 
    deleteCustomer(customer) {
