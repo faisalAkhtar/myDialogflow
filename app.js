@@ -6,7 +6,7 @@ const app = express();
 const pQueue = require('./pQueue.js');
 
 // INITIALISING FIREBASE APP
-var firebaseApp = firebase.initializeApp({
+const firebaseApp = firebase.initializeApp({
 	apiKey: "AIzaSyDtS9Js6uGELqIN5ZaI4C8-FN45NQP3eXc",
 	authDomain: "operatorhandler.firebaseapp.com",
 	databaseURL: "https://operatorhandler.firebaseio.com",
@@ -20,27 +20,32 @@ var waitingCustomersList=[];
 const activeOperators=new pQueue();
 
 // GETTING DATABASE REFERENCE
-var database = firebase.database().ref();
+const database = firebase.database().ref();
 
-// GETTING AVAILABLE OPERATORS
+// GETTING OPERATORS FROM DATABASE
 database.child('operators').on('child_added',snap=>{
 	database.child('operators').child(snap.key).child('online').on('value', snapp => {
 		if(snapp.val()) {
+		// GETTING ONLINE OPERATORS
+			database.child('operators/'+snap.key+'/customers').set(null);
 			activeOperators.addOperator(snap.key);
 			sendLog(snap,'online',0);
 			while(waitingCustomersList.length!=0) {
-				activeOperators.assignCustomer(waitingCustomersList[0])
+				activeOperators.assignCustomer(waitingCustomersList[0],database)
 				waitingCustomersList.shift()
 			}
 			appLogs()
 		} else {
-			let customersWaiting=activeOperators.deleteOperator(snap.key);
+		// REMOVING OFFLINE OPERATORS
+			database.child('operators/'+snap.key+'/customers').set(null);
+			let customersWaiting=activeOperators.deleteOperator(snap.key,database)
 			if(customersWaiting!=null) {
 				if(activeOperators.length==0 || activeOperators.length==undefined || activeOperators.length==null) {
 					while(customersWaiting.customers.length!=0) {
 						waitingCustomersList.push(customersWaiting.customers[0]);
 						customersWaiting.customers.shift();
 					}
+					waitingCustomersList=[];
 				}
 				sendLog(snap,'offline',0);
 				appLogs()
@@ -51,13 +56,15 @@ database.child('operators').on('child_added',snap=>{
 
 // DELETING OPERATORS IF DELETED FROM DATABASE
 database.child('operators').on('child_removed',snap=>{
-	activeOperators.deleteOperator(snap.key)
+	activeOperators.deleteOperator(snap.key,database)
 });
 
 // GETTING AVAILABLE CUSTOMERS
 database.child('customers').on('child_added',snap=>{
-	if(!activeOperators.assignCustomer(snap.key))
-		waitingCustomersList.push(snap.key)
+	let operatorAssignedTo=activeOperators.assignCustomer(snap,database)
+	if(operatorAssignedTo==null) {
+		waitingCustomersList.push(snap)
+	}
 	sendLog(snap,'escalated',1)
 	activeCustomers++
 	appLogs()
@@ -65,7 +72,14 @@ database.child('customers').on('child_added',snap=>{
 
 // REMOVING UNAVAILABLE CUSTOMERS
 database.child('customers').on('child_removed',snap=>{
-	activeOperators.deleteCustomer(snap.key)
+	let Operator=activeOperators.deleteCustomer(snap.key)
+	if(Operator!=null) {
+		database.child('operators/'+Operator.operator+'/customers').on('child_added',snapp=>{
+			if(snapp.child('id').val()==snap.key)
+				database.child('operators/'+Operator.operator+'/customers/'+snapp.key).remove();
+//			snapp.remove();
+		});
+	}
 	sendLog(snap,'disconnected',1)
 	activeCustomers--
 	appLogs()
@@ -81,9 +95,9 @@ function appLogs() {
 	for (var i = 0; i < activeOperators.operators.length; i++) {
 		logs+='\nOperator('+activeOperators.operators[i].operator+')'+'['+activeOperators.operators[i].customers.length+']'+' : { ';
 		for (var j = 0; j < activeOperators.operators[i].customers.length; j++) {
-			logs+=activeOperators.operators[i].customers[j]+' ';
+			logs+=activeOperators.operators[i].customers[j].key+' ';
 		}
-		logs+=' }';
+		logs+='}';
 	}
 	logs+=br;
 	console.log(logs);
