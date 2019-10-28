@@ -1,3 +1,4 @@
+const logging = require('fs');
 class QOperator {
    constructor(operator,customers,priority) {
       this.operator=operator
@@ -16,6 +17,10 @@ class PQueue {
    }
 
    enqueue(operator,customers,priority) {
+      //console.log("\t\tenqueue("+operator+" --- "+customers+" --- "+priority+")\n---------------------------------------------------------------------------")
+      //logging.appendFile('logs.txt',"\n\t\tenqueue("+operator+" --- "+customers+" --- "+priority+")\n---------------------------------------------------------------------------",(err)=>{
+         //if(err) throw err
+      //})
       var qOperator=new QOperator(operator,customers,priority)
       var flag=false
 
@@ -32,6 +37,10 @@ class PQueue {
    }
 
    dequeue() {
+      //console.log("\t\tdequeue()\n---------------------------------------------------------------------------")
+      //logging.appendFile('logs.txt',"\n\t\tdequeue()\n---------------------------------------------------------------------------",(err)=>{
+         //if(err) throw err
+      //})
       if(this.isEmpty())   return 'EMPTY'
       return this.operators.shift()
    }
@@ -41,10 +50,18 @@ class PQueue {
    }
 
    addOperator(operator) {
+      //console.log("\t\taddOperator("+operator+")\n---------------------------------------------------------------------------")
+      //logging.appendFile('logs.txt',"\n\t\taddOperator("+operator+")\n---------------------------------------------------------------------------",(err)=>{
+         //if(err) throw err
+      //})
       this.enqueue(operator,[],0)
    }
 
    deleteOperator(operator) {
+      //console.log("\t\tdeleteOperator("+operator+")\n---------------------------------------------------------------------------")
+      //logging.appendFile('logs.txt',"\n\t\tdeleteOperator("+operator+")\n---------------------------------------------------------------------------",(err)=>{
+         //if(err) throw err
+      //})
       var returnValue
       for (var i = 0; i < this.operators.length; i++) {
          if(this.operators[i].operator==operator) {
@@ -60,31 +77,40 @@ class PQueue {
    }
 
    assignCustomer(customer) {
+      //console.log("\t\tassignCustomer("+customer+")\n---------------------------------------------------------------------------")
+      //logging.appendFile('logs.txt',"\n\t\tassignCustomer("+customer+")\n---------------------------------------------------------------------------",(err)=>{
+         //if(err) throw err
+      //})
       let operator=this.dequeue()
       operator.customers.push(customer)
       this.enqueue(operator.operator,operator.customers,++(operator.priority))
    }
 
    deleteCustomer(customer) {
+      //console.log("\t\tdeleteCustomer("+customer+")\n---------------------------------------------------------------------------")
+      //logging.appendFile('logs.txt',"\n\t\tdeleteCustomer("+customer+")\n---------------------------------------------------------------------------",(err)=>{
+         //if(err) throw err
+      //})
       var Operator
       for (var i = 0; i < this.operators.length; i++) {
          for (var j = 0; j < this.operators[i].customers.length; j++) {
             if(this.operators[i].customers[j]==customer) {
-               Operator=this.deleteOperator(this.operators[i].operator)
+               Operator=this.operators[i]
+               this.operators.splice(i,1)
+               Operator.customers.splice(j,1)
+               Operator.priority--
+               this.enqueue(Operator.operator,Operator.customers,Operator.priority)
                break
             }
          }
       }
-      for (var i=0;i<Operator.customers.length;i++) {
-         if(Operator.customers[i]==customer) {
-            Operator.customers.splice(i,1)
-            break
-         }
-      }
-      this.enqueue(Operator.operator,Operator.customers,--(Operator.priority))
    }
 
    printCustomers(operator) {
+      //console.log("\t\tprintCustomers("+operator+")\n---------------------------------------------------------------------------")
+      //logging.appendFile('logs.txt',"\n\t\tprintCustomers("+operator+")\n---------------------------------------------------------------------------",(err)=>{
+         //if(err) throw err
+      //})
       let cu='';
       for (var i = 0; i < this.operators.length; i++) {
          if(this.operators[i].operator==operator) {
@@ -97,6 +123,10 @@ class PQueue {
    }
 
    printPQueue() {
+      //console.log("\t\tprintPQueue()\n---------------------------------------------------------------------------")
+      //logging.appendFile('logs.txt',"\n\t\tprintPQueue()\n---------------------------------------------------------------------------",(err)=>{
+         //if(err) throw err
+      //})
       let qu=''
       for (var i=0;i<this.operators.length;i++)
          qu+=this.operators[i].operator+'('+this.operators[i].priority+') --> '
