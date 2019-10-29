@@ -61,21 +61,6 @@ let fn=database.child('operators').on('child_added',snap=>{
 });
 handleA.push(fn);
 
-function cust(id,fName,lName) {
-	let c=database.child('customers').push()
-	c.set({
-		id:id,
-		fName:fName,
-		lName:lName
-	})
-}
-
-cust("gaurav","Gaurav","Saini")
-cust("vikas","Vikas","Kambojh")
-cust("ridhwan","Ridhwan","Luthra")
-cust("rishabh","Rishabh","Jain")
-cust("hardik","Hardik","Kapoor")
-
 // DELETING OPERATORS IF DELETED FROM DATABASE
 handleC.forEach(fn2 => database.child('operators').off('child_removed',fn2));
 let fn2=database.child('operators').on('child_removed',snap=>{
@@ -173,3 +158,20 @@ app.listen(6969,()=>{
 		if(err) throw err
 	});
 })
+
+// TEMPORARILY ADDING CUSTOMERS ITSELF
+function cust(id,fName,lName) {
+	let c=database.child('customers').push()
+	c.set({
+		id:id,
+		fName:fName,
+		lName:lName
+	})
+}
+setTimeout(()=>{
+	cust("gaurav","Gaurav","Saini")
+	cust("vikas","Vikas","Kambojh")
+	cust("ridhwan","Ridhwan","Luthra")
+	cust("rishabh","Rishabh","Jain")
+	cust("hardik","Hardik","Kapoor")
+},3000);
