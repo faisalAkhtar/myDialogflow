@@ -1,4 +1,5 @@
 let handleA = [];
+var noOfCustomers = 0;
 (function() {
 	var firebaseConfig = {
 		apiKey: "AIzaSyDtS9Js6uGELqIN5ZaI4C8-FN45NQP3eXc",
@@ -29,7 +30,6 @@ let handleA = [];
 }());
 
 function initApp(uid) {
-	document.getElementsByClassName('peopleMsgs')[0].innerHTML = "";
 	const dbRef = firebase.database().ref();
 	dbRef.child('operators').child(uid).update({
 		"online" : true
@@ -42,6 +42,13 @@ function initApp(uid) {
 //		document.getElementsByClassName('loggedDP')[0].src = snap.child('photoURL').val();
 	});
 	dbRef.child('operators').child(uid).child('customers').on('child_added', snap => {
+		noOfCustomers++
+		if (noOfCustomers==1) {
+			console.log("FIRST CUSTOMER")
+			document.getElementsByClassName('peopleMsgs')[0].innerHTML=""
+		} else {
+			console.log("No. of customers: "+noOfCustomers)
+		}
 		const ppl = document.getElementsByClassName('peopleMsgs')[0];
 			var pplDiv = document.createElement("div");
 				pplDiv.setAttribute("class","people "+snap.key);
@@ -59,12 +66,29 @@ function initApp(uid) {
 //					pplTxt.appendChild(pplTxtTxt);
 			pplDiv.appendChild(pplTxt);
 		ppl.appendChild(pplDiv);
-		if(document.getElementById('loading')!=null){
-			document.getElementById('loading').parentNode.removeChild(document.getElementById('loading'));
-		}
 	});
 
 	dbRef.child('operators').child(uid).child('customers').on('child_removed', snap => {
+		noOfCustomers--
+		if(noOfCustomers==0) {
+			console.log("NO CUSTOMERS")
+			const ppl = document.getElementsByClassName('peopleMsgs')[0];
+				var pplDiv = document.createElement("div");
+					pplDiv.setAttribute("class","people "+"noCustomers");
+				var pplTxt = document.createElement('text');
+					pplTxt.setAttribute("class","peopleName");
+					var pplTxtName = document.createElement("div");
+						pplTxtName.setAttribute("class","name");
+						pplTxtName.innerHTML = "< No customers >";
+					pplTxt.appendChild(pplTxtName);
+				pplDiv.appendChild(pplTxt);
+			ppl.appendChild(pplDiv);
+			var coverDiv = document.createElement("div");
+				coverDiv.setAttribute("id","cover");
+			document.getElementsByTagName('body')[0].appendChild(coverDiv);
+		} else {
+			console.log("No. of customers: "+noOfCustomers)
+		}
 		document.getElementsByClassName(snap.key)[0].remove();
 	});
 }
