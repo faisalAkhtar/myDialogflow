@@ -13,6 +13,9 @@ const firebaseApp = firebase.initializeApp({
 	storageBucket: "operatorhandler.appspot.com"
 });
 
+// FIREBASE OFF HANDLE
+let handleA=[],handleB=[],handleC=[],handleD=[],handleE=[],handleF=[];
+
 // CONSTANTS
 const br = "\n---------------------------------------------------------------------------";
 var activeCustomers=0;
@@ -23,8 +26,10 @@ const activeOperators=new pQueue();
 const database = firebase.database().ref();
 
 // GETTING OPERATORS FROM DATABASE
-database.child('operators').on('child_added',snap=>{
-	database.child('operators').child(snap.key).child('online').on('value', snapp => {
+handleA.forEach(fn => database.child('operators').off('child_added',fn));
+let fn=database.child('operators').on('child_added',snap=>{
+	handleB.forEach(gn => database.child('operators').child(snap.key).child('online').off('value',gn));
+	let gn=database.child('operators').child(snap.key).child('online').on('value', snapp => {
 		if(snapp.val()) {
 		// GETTING ONLINE OPERATORS
 			database.child('operators/'+snap.key+'/customers').set(null);
@@ -52,15 +57,35 @@ database.child('operators').on('child_added',snap=>{
 			}
 		}
 	});
+	handleB.push(gn)
 });
+handleA.push(fn);
+
+function cust(id,fName,lName) {
+	let c=database.child('customers').push()
+	c.set({
+		id:id,
+		fName:fName,
+		lName:lName
+	})
+}
+
+cust("gaurav","Gaurav","Saini")
+cust("vikas","Vikas","Kambojh")
+cust("ridhwan","Ridhwan","Luthra")
+cust("rishabh","Rishabh","Jain")
+cust("hardik","Hardik","Kapoor")
 
 // DELETING OPERATORS IF DELETED FROM DATABASE
-database.child('operators').on('child_removed',snap=>{
+handleC.forEach(fn2 => database.child('operators').off('child_removed',fn2));
+let fn2=database.child('operators').on('child_removed',snap=>{
 	activeOperators.deleteOperator(snap.key,database)
 });
+handleC.push(fn2)
 
 // GETTING AVAILABLE CUSTOMERS
-database.child('customers').on('child_added',snap=>{
+handleD.forEach(fn3 => database.child('customers').off('child_added',fn3));
+let fn3=database.child('customers').on('child_added',snap=>{
 	let operatorAssignedTo=activeOperators.assignCustomer(snap,database)
 	if(operatorAssignedTo==null) {
 		waitingCustomersList.push(snap)
@@ -69,21 +94,25 @@ database.child('customers').on('child_added',snap=>{
 	activeCustomers++
 	appLogs()
 });
+handleD.push(fn3)
 
+/*
 // REMOVING UNAVAILABLE CUSTOMERS
-database.child('customers').on('child_removed',snap=>{
+handleE.forEach(fn4 => database.child('customers').off('child_removed',fn4));
+let fn4=database.child('customers').on('child_removed',snap=>{
 	let Operator=activeOperators.deleteCustomer(snap.key)
 	if(Operator!=null) {
 		database.child('operators/'+Operator.operator+'/customers').on('child_added',snapp=>{
 			if(snapp.child('id').val()==snap.key)
 				database.child('operators/'+Operator.operator+'/customers/'+snapp.key).remove();
-//			snapp.remove();
 		});
 	}
 	sendLog(snap,'disconnected',1)
 	activeCustomers--
 	appLogs()
 });
+handleE.push(fn4)
+*/
 
 // CUSTOMERS AND OPERATORS LOG
 function appLogs() {
@@ -95,7 +124,7 @@ function appLogs() {
 	for (var i = 0; i < activeOperators.operators.length; i++) {
 		logs+='\nOperator('+activeOperators.operators[i].operator+')'+'['+activeOperators.operators[i].customers.length+']'+' : { ';
 		for (var j = 0; j < activeOperators.operators[i].customers.length; j++) {
-			logs+=activeOperators.operators[i].customers[j].key+' ';
+			logs+=activeOperators.operators[i].customers[j].child('id').val()+' ';
 		}
 		logs+='}';
 	}
@@ -139,8 +168,8 @@ app.get('/operator',(req,res)=>{res.sendFile(`${__dirname}/operator.html`)})
 app.get('/admin',(req,res)=>{res.sendFile(`${__dirname}/admin.html`)})
 
 app.listen(6969,()=>{
-	console.log(getTimestamp(new Date)+"\nServer is live on port 6969*"+br)
-	logging.appendFile('logs.txt',getTimestamp(new Date)+"\nServer is live on port 6969*"+br,(err)=>{
+	console.log("\n"+getTimestamp(new Date)+"\nServer is live on port 6969*"+br)
+	logging.appendFile('logs.txt',"\n"+getTimestamp(new Date)+"\nServer is live on port 6969*"+br,(err)=>{
 		if(err) throw err
 	});
 })

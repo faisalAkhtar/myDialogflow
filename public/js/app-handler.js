@@ -1,4 +1,4 @@
-let handleA = [];
+let handleA=[], handleB=[], handleC=[];
 var noOfCustomers = 0;
 (function() {
 	var firebaseConfig = {
@@ -41,7 +41,8 @@ function initApp(uid) {
 //		document.getElementsByClassName('loggedName')[0].innerHTML = snap.child('fName').val() + " " + snap.child('lName').val();
 //		document.getElementsByClassName('loggedDP')[0].src = snap.child('photoURL').val();
 	});
-	dbRef.child('operators').child(uid).child('customers').on('child_added', snap => {
+	handleB.forEach(fn2 => dbRef.child('operators').child(uid).child('customers').off('child_added',fn2));
+	let fn2=dbRef.child('operators').child(uid).child('customers').on('child_added', snap => {
 		noOfCustomers++
 		if (noOfCustomers==1) {
 			console.log("FIRST CUSTOMER")
@@ -67,8 +68,10 @@ function initApp(uid) {
 			pplDiv.appendChild(pplTxt);
 		ppl.appendChild(pplDiv);
 	});
+	handleB.push(fn2)
 
-	dbRef.child('operators').child(uid).child('customers').on('child_removed', snap => {
+	handleC.forEach(fn3 => dbRef.child('operators').child(uid).child('customers').off('child_removed',fn3));
+	let fn3=dbRef.child('operators').child(uid).child('customers').on('child_removed', snap => {
 		noOfCustomers--
 		if(noOfCustomers==0) {
 			console.log("NO CUSTOMERS")
@@ -91,6 +94,7 @@ function initApp(uid) {
 		}
 		document.getElementsByClassName(snap.key)[0].remove();
 	});
+	handleC.push(fn3);
 }
 
 function opnMsgs(sndrID) {

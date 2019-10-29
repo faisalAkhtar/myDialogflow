@@ -93,10 +93,11 @@ class PQueue {
 
          let x=database.child('operators/'+operator.operator+'/customers').push()
          x.set({
-            id:customer.key,
+            id:customer.child('id').val(),
             fName:customer.child('fName').val(),
             lName:customer.child('lName').val()
          })
+         database.child('customers/'+customer.key).remove();
 
          return operator.operator
       }
