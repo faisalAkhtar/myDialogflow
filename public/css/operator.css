@@ -34,6 +34,7 @@ input:focus {
 .peopleMsgs {	
 	height:91.5%;	
 	overflow-y:auto;	
+	border-right:1px solid #eee;	
 }	
 
 .people {	
@@ -47,7 +48,7 @@ input:focus {
 }	
 
 .selected {	
-	background-color: #e2e2ff	
+	background-color: rgba(0,128,128,0.2)	
 }	
 
 .peopleDiv .people:hover {	
@@ -108,7 +109,7 @@ input:focus {
 	padding:2%;	
 	left:0;	
 	z-index:1;	
-	color:purple;	
+	color:#008080;	
 	display:none;	
 }	
 
@@ -130,7 +131,7 @@ input:focus {
 	text-align:center;	
 	margin:10px auto;	
 	font-size:120%;	
-	color:purple;	
+	color:#008080;	
 	cursor:default;	
 }	
 
@@ -157,17 +158,12 @@ input:focus {
 	width:100%;	
 	position:absolute;	
 	bottom:0;	
-	background-color:rgba(128,0,128,0.9);	
+	background-color:#008080;	
 	color:white;	
 	cursor:pointer;	
 	text-align:center;	
 	box-shadow: 2px 0 10px 4px rgba(0, 0, 0, 0.10),	
 						 1px 0 10px 5px rgba(0, 0, 0, 0.09);	
-}	
-
-.loggedSignOut:hover {	
-	transition-duration:0.5s;	
-	background-color:rgb(128,0,128);	
 }	
 
 #cover {	
@@ -224,7 +220,7 @@ input:focus {
 	position: absolute;	
 	top: 50%;	
 	transform: translateY(-50%);	
-	color: purple;	
+	color: #008080;	
 	cursor: pointer;	
 	display: none;	
 }	
@@ -252,7 +248,7 @@ input:focus {
 	text-align: center;	
 	left: 50%;	
 	top: 50%;	
-	color: purple;	
+	color: #008080;	
 	transform: translate(-50%,-50%);	
 	margin: 0;	
 	font-weight: bold;	
@@ -278,7 +274,7 @@ input:focus {
 }	
 
 .sender {	
-  background-color: #64A3FF;	
+  background-color: #008080;	
 	color: #fff;	
 	border-radius: 25px 0 25px 25px;	
 	padding: 0.5% 5%;	
@@ -288,12 +284,12 @@ input:focus {
 
 .time-right {	
 	float: left;	
-  color: purple;	
+  color: #008080;	
 }	
 
 .time-left {	
 	float: right;	
-  color: purple;	
+  color: #008080;	
 }	
 
 .sendTxt {	
@@ -330,14 +326,14 @@ input:focus {
 	overflow-x:hidden;	
 	overflow-y:auto;	
 	resize: none;	
-	color: purple;	
+	color: #008080;	
 }	
 
 #sndBtn {	
 	width: 8%;	
 	right: 0;	
 	cursor: pointer;	
-	color: purple;	
+	color: #008080;	
 }	
 
 #sndBtn img {	
@@ -349,7 +345,7 @@ input:focus {
 }	
 
 #sndBtn:hover {	
-	background-color: purple;	
+	background-color: #008080;	
 	color: white;	
 }	
 
@@ -405,7 +401,7 @@ input:focus {
 	width: 40%;	
 	background-color: red;	
 	border-radius: 15px;	
-	border: 2px solid purple;	
+	border: 2px solid #008080;	
 	overflow-x: hidden;	
 	overflow-y: auto;	
 	max-height: 50%;	
@@ -417,8 +413,8 @@ input:focus {
 .menuItem {	
 	display: block;	
 	padding: 20px 15px;	
-	border-top: 1px solid purple;	
-	border-bottom: 1px solid purple;	
+	border-top: 1px solid #008080;	
+	border-bottom: 1px solid #008080;	
 	box-sizing: border-box;	
 	cursor: pointer;	
 }	
@@ -458,7 +454,7 @@ input:focus {
 		top:50%;	
 		transform:translateY(-50%);	
 		right:4%;	
-		color:purple;	
+		color:#008080;	
 		cursor:pointer;	
 	}	
 	.peopleDiv, .loggedDiv {	
@@ -518,9 +514,7 @@ input:focus {
 } */	
 /* Handle */	
 ::-webkit-scrollbar-thumb {	
-  background: #64A3FF;	
+  background: #008080;	
   border-radius: 8px;	
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);	
-}	
-/* Handle on hover */	
-::-webkit-scrollbar-thumb:hover { background: #4471b3; }
+}
