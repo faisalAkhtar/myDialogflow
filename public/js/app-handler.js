@@ -11,7 +11,6 @@ var noOfCustomers = 0;
 	firebase.initializeApp(firebaseConfig);
 	const btnLogout = document.getElementById('logOut');
 	btnLogout.addEventListener('click', e=> {
-		$(window).unbind();
 		let uid = document.getElementsByClassName('loggedProfile')[0].id;
 		console.log(uid);
 		firebase.database().ref().child('operators').child(uid).update({
@@ -44,33 +43,30 @@ function initApp(uid) {
 	});
 	handleB.forEach(fn2 => dbRef.child('operators').child(uid).child('customers').off('child_added',fn2));
 	let fn2=dbRef.child('operators').child(uid).child('customers').on('child_added', snap => {
-		var takeCustomer = confirm("Do you accept customer: "+snap.child('fName').val()+" "+snap.child('lName').val()+"?")
-		if(takeCustomer) {
-			noOfCustomers++
-			if (noOfCustomers==1) {
-				console.log("FIRST CUSTOMER")
-				document.getElementsByClassName('peopleMsgs')[0].innerHTML=""
-			} else {
-				console.log("No. of customers: "+noOfCustomers)
-			}
-			const ppl = document.getElementsByClassName('peopleMsgs')[0];
-				var pplDiv = document.createElement("div");
-					pplDiv.setAttribute("class","people "+snap.key);
-					pplDiv.setAttribute("onclick","opnMsgs('"+snap.key+"')");
-				var pplTxt = document.createElement('text');
-					pplTxt.setAttribute("class","peopleName");
-					var pplTxtName = document.createElement("div");
-						pplTxtName.setAttribute("class","name");
-						pplTxtName.innerHTML = snap.child('fName').val();
-	//			 TODO :	DISPLAY LATEST MESSAGE and NUMBER OF MESSAGES ARRIVED
-	//					var pplTxtTxt = document.createElement("div");
-	//						pplTxtTxt.setAttribute("class","text");
-	//						pplTxtTxt.innerHTML = "Kya kr rha hh be!!!!!!!!!!!!!!";
-					pplTxt.appendChild(pplTxtName);
-	//					pplTxt.appendChild(pplTxtTxt);
-				pplDiv.appendChild(pplTxt);
-			ppl.appendChild(pplDiv);
+		noOfCustomers++
+		if (noOfCustomers==1) {
+			console.log("FIRST CUSTOMER")
+			document.getElementsByClassName('peopleMsgs')[0].innerHTML=""
+		} else {
+			console.log("No. of customers: "+noOfCustomers)
 		}
+		const ppl = document.getElementsByClassName('peopleMsgs')[0];
+			var pplDiv = document.createElement("div");
+				pplDiv.setAttribute("class","people "+snap.key);
+				pplDiv.setAttribute("onclick","opnMsgs('"+snap.key+"')");
+			var pplTxt = document.createElement('text');
+				pplTxt.setAttribute("class","peopleName");
+				var pplTxtName = document.createElement("div");
+					pplTxtName.setAttribute("class","name");
+					pplTxtName.innerHTML = snap.child('fName').val();
+//			 TODO :	DISPLAY LATEST MESSAGE and NUMBER OF MESSAGES ARRIVED
+//					var pplTxtTxt = document.createElement("div");
+//						pplTxtTxt.setAttribute("class","text");
+//						pplTxtTxt.innerHTML = "Kya kr rha hh be!!!!!!!!!!!!!!";
+				pplTxt.appendChild(pplTxtName);
+//					pplTxt.appendChild(pplTxtTxt);
+			pplDiv.appendChild(pplTxt);
+		ppl.appendChild(pplDiv);
 	});
 	handleB.push(fn2)
 
