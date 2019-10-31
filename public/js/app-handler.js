@@ -66,7 +66,7 @@ function initApp(uid) {
 				pplTxt.appendChild(pplTxtName);
 //					pplTxt.appendChild(pplTxtTxt);
 			pplDiv.appendChild(pplTxt);
-		ppl.appendChild(pplDiv);
+		ppl.prepend(pplDiv);
 	});
 	handleB.push(fn2)
 
