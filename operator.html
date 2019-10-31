@@ -14,10 +14,19 @@
 <!--  People  -->
 <div class="peopleDiv peopleDivSmall">
   <div class="peopleMsgs">
-    <div class="people noCustomers">
-      <text class="peopleName">
-        <div class="name">&lt; No customers &gt;</div>
-      </text>
+    <div class="pauseDiv">
+      Take a break
+      <label class="switch">
+        <input type="checkbox" id="pauseButton" onclick="pauseCustomers()">
+        <span class="slider round"></span>
+      </label>
+    </div>
+   <div class="peopleMsgz">
+      <div class="people noCustomers">
+        <text class="peopleName">
+          <div class="name">&lt; No customers &gt;</div>
+        </text>
+      </div>
     </div>
   </div>
   <div class="loggedSignOut" id="logOut">Sign Out</div>
