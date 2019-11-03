@@ -20,6 +20,7 @@ let handleA=[],handleB=[],handleC=[],handleD=[],handleE=[],handleF=[];
 const br = "\n---------------------------------------------------------------------------";
 var activeCustomers=0;
 var waitingCustomersList=[];
+var pausedOperatorsList=[];
 const activeOperators=new pQueue();
 
 // GETTING DATABASE REFERENCE
@@ -33,6 +34,7 @@ let fn=database.child('operators').on('child_added',snap=>{
 		if(snapp.val()) {
 		// GETTING ONLINE OPERATORS
 			database.child('operators/'+snap.key+'/customers').set(null);
+			database.child('operators/'+snap.key+'/pause').set(false);
 			activeOperators.addOperator(snap.key);
 			sendLog(snap,'online',0);
 			while(waitingCustomersList.length!=0) {
@@ -58,6 +60,31 @@ let fn=database.child('operators').on('child_added',snap=>{
 		}
 	});
 	handleB.push(gn)
+
+	handleF.forEach(gn2=>database.child('operators/'+snap.key+'/pause').off('value',gn2))
+	let gn2=database.child('operators/'+snap.key+'/pause').on('value',snapp=>{
+		if(snap.child('online').val()) {
+		   if(snapp.val()) {
+		   	let temp=activeOperators.removeOperatorFromQueue(snap.key);
+		   	if(temp!=null)
+		   		pausedOperatorsList.push(temp);
+		      console.log(getTimestamp(new Date)+"\nOperator "+snap.child('fName').val()+' '+snap.child('lName').val()+" is on a break now!!"+br);
+				logging.appendFile('logs.txt',"\n"+getTimestamp(new Date)+"\nOperator "+snap.child('fName').val()+' '+snap.child('lName').val()+" is on a break now!"+br,(err)=>{
+					if(err) throw err
+				});
+		      appLogs()
+		   }
+		   else {
+		   	activeOperators.addOperatorToQueue(snap.key,pausedOperatorsList);
+		      console.log(getTimestamp(new Date)+"\nOperator "+snap.child('fName').val()+' '+snap.child('lName').val()+" is accepting customers now!!"+br);
+				logging.appendFile('logs.txt',"\n"+getTimestamp(new Date)+"\nOperator "+snap.child('fName').val()+' '+snap.child('lName').val()+" is accepting customers now!"+br,(err)=>{
+					if(err) throw err
+				});
+		      appLogs()
+		   }
+		}
+	})
+	handleF.push(gn2);
 });
 handleA.push(fn);
 

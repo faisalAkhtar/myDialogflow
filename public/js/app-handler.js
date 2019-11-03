@@ -38,6 +38,8 @@ function initApp(uid) {
 	});
 	dbRef.child('operators').child(uid).once('value', snap => {
 		document.getElementsByClassName('loggedProfile')[0].id = snap.key;
+		document.getElementsByClassName('switch')[0].style.visibility = 'visible';
+		document.getElementById('pauseButton').checked = snap.child('pause').val();
 //		document.getElementsByClassName('loggedName')[0].innerHTML = snap.child('fName').val() + " " + snap.child('lName').val();
 //		document.getElementsByClassName('loggedDP')[0].src = snap.child('photoURL').val();
 	});
@@ -46,11 +48,11 @@ function initApp(uid) {
 		noOfCustomers++
 		if (noOfCustomers==1) {
 			console.log("FIRST CUSTOMER")
-			document.getElementsByClassName('peopleMsgs')[0].innerHTML=""
+			document.getElementsByClassName('peopleMsgz')[0].innerHTML=""
 		} else {
 			console.log("No. of customers: "+noOfCustomers)
 		}
-		const ppl = document.getElementsByClassName('peopleMsgs')[0];
+		const ppl = document.getElementsByClassName('peopleMsgz')[0];
 			var pplDiv = document.createElement("div");
 				pplDiv.setAttribute("class","people "+snap.key);
 				pplDiv.setAttribute("onclick","opnMsgs('"+snap.key+"')");
@@ -75,7 +77,7 @@ function initApp(uid) {
 		noOfCustomers--
 		if(noOfCustomers==0) {
 			console.log("NO CUSTOMERS")
-			const ppl = document.getElementsByClassName('peopleMsgs')[0];
+			const ppl = document.getElementsByClassName('peopleMsgz')[0];
 				var pplDiv = document.createElement("div");
 					pplDiv.setAttribute("class","people "+"noCustomers");
 				var pplTxt = document.createElement('text');
@@ -188,4 +190,11 @@ function sendTxtMsg(arg) {
 		document.getElementById('txtMsg').value = "";
 		document.getElementById('txtMsg').focus();
 	}
+}
+
+function pauseCustomers() {
+	if(document.getElementById('pauseButton').checked)
+		firebase.database().ref('operators/'+document.getElementsByClassName('loggedProfile')[0].id+'/pause').set(true)
+	else
+		firebase.database().ref('operators/'+document.getElementsByClassName('loggedProfile')[0].id+'/pause').set(false)
 }

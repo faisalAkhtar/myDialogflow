@@ -81,9 +81,37 @@ class PQueue {
       return returnValue
    }
 
+   removeOperatorFromQueue(operator) {
+      //console.log("\t\tremoveOperatorFromQueue("+operator.key+")\n---------------------------------------------------------------------------")
+      //logging.appendFile('logs.txt',"\n\t\tremoveOperatorFromQueue("+operator.key+")\n---------------------------------------------------------------------------",(err)=>{
+         //if(err) throw err
+      //})
+      for (var i = 0; i < this.operators.length; i++) {
+         if(this.operators[i].operator==operator) {
+            let temp=this.operators[i]
+            this.operators.splice(i,1)
+            return temp
+         }
+      }
+      return null
+   }
+
+   addOperatorToQueue(Operator,pausedOperatorsList) {
+      //console.log("\t\taddOperatorToQueue("+Operator.key+")\n---------------------------------------------------------------------------")
+      //logging.appendFile('logs.txt',"\n\t\taddOperatorToQueue("+Operator.key+")\n---------------------------------------------------------------------------",(err)=>{
+         //if(err) throw err
+      //})
+      for (var i=pausedOperatorsList.length-1;i>=0;i--) {
+         if(pausedOperatorsList[i].operator==Operator) {
+            this.enqueue(pausedOperatorsList[i].operator,pausedOperatorsList[i].customers,pausedOperatorsList[i].priority)
+            return
+         }
+      }
+   }
+
    assignCustomer(customer,database) {
-      //console.log("\t\tassignCustomer("+customer+")\n---------------------------------------------------------------------------")
-      //logging.appendFile('logs.txt',"\n\t\tassignCustomer("+customer+")\n---------------------------------------------------------------------------",(err)=>{
+      //console.log("\t\tassignCustomer("+customer.child('fName').val()+' '+customer.child('lName').val()+")\n---------------------------------------------------------------------------")
+      //logging.appendFile('logs.txt',"\n\t\tassignCustomer("+customer.child('fName').val()+' '+customer.child('lName').val()+")\n---------------------------------------------------------------------------",(err)=>{
          //if(err) throw err
       //})
       let operator=this.dequeue()
