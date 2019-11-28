@@ -56,15 +56,9 @@ input:focus {
 }
 
 .people {	
-	padding:50px 10%;	
+	padding:50px 10%;
 }
 
-/*
-*
-*
-*
-*
-*/
 .switch {
   position: relative;
   visibility: hidden;
@@ -332,8 +326,8 @@ input:checked + .slider:before {
 	overflow: hidden;	
 	text-overflow: ellipsis;	
 	white-space: nowrap;	
-	text-align: center;	
-	left: 50%;	
+	text-align: left;	
+	left: 33.33%;	
 	top: 50%;	
 	color: #008080;	
 	transform: translate(-50%,-50%);	
@@ -341,6 +335,22 @@ input:checked + .slider:before {
 	font-weight: bold;	
 	font-size: 150%;	
 }	
+
+.btns {
+	background-color:#008080;
+	color:white;
+	position:absolute;
+	padding:1% 0;
+	width:15%;
+	text-align:center;
+	cursor:pointer;
+	border-radius:5px;
+	top:50%;
+	transform:translateY(-50%);
+}
+
+.eoc { right:7.5% }
+.tmpl { right:25% }
 
 .container {	
 	cursor: pointer;	
@@ -532,6 +542,9 @@ input:checked + .slider:before {
 	.title-bar .fas {	
 		display: block;	
 	}	
+	.onSmal {
+		display: none;
+	}
 	.peopleDivSearch {	
 		width: 80%;	
 	}	

@@ -14,7 +14,7 @@ const firebaseApp = firebase.initializeApp({
 });
 
 // FIREBASE OFF HANDLE
-let handleA=[],handleB=[],handleC=[],handleD=[],handleE=[],handleF=[];
+let handleA=[],handleB=[],handleC=[],handleD=[],handleE=[],handleF=[], handleG=[];
 
 // CONSTANTS
 const br = "\n---------------------------------------------------------------------------";
@@ -37,8 +37,7 @@ let fn=database.child('operators').on('child_added',snap=>{
 			database.child('operators/'+snap.key+'/pause').set(false);
 			activeOperators.addOperator(snap.key);
 			sendLog(snap,'online',0);
-			while(waitingCustomersList.length!=0) {
-				activeOperators.assignCustomer(waitingCustomersList[0],database)
+			while(waitingCustomersList.length!=0 && activeOperators.assignCustomer(waitingCustomersList[0],database)!=null) {
 				waitingCustomersList.shift()
 			}
 			appLogs()
@@ -67,24 +66,36 @@ let fn=database.child('operators').on('child_added',snap=>{
 		   if(snapp.val()) {
 		   	let temp=activeOperators.removeOperatorFromQueue(snap.key);
 		   	if(temp!=null)
-		   		pausedOperatorsList.push(temp);
-		      console.log(getTimestamp(new Date)+"\nOperator "+snap.child('fName').val()+' '+snap.child('lName').val()+" is on a break now!!"+br);
+		   		pausedOperatorsList.push(temp)
+		      console.log(getTimestamp(new Date)+"\nOperator "+snap.child('fName').val()+' '+snap.child('lName').val()+" is on a break now!!"+br)
 				logging.appendFile('logs.txt',"\n"+getTimestamp(new Date)+"\nOperator "+snap.child('fName').val()+' '+snap.child('lName').val()+" is on a break now!"+br,(err)=>{
 					if(err) throw err
-				});
+				})
 		      appLogs()
 		   }
 		   else {
-		   	activeOperators.addOperatorToQueue(snap.key,pausedOperatorsList);
-		      console.log(getTimestamp(new Date)+"\nOperator "+snap.child('fName').val()+' '+snap.child('lName').val()+" is accepting customers now!!"+br);
+		   	activeOperators.addOperatorToQueue(snap.key,pausedOperatorsList)
+		      console.log(getTimestamp(new Date)+"\nOperator "+snap.child('fName').val()+' '+snap.child('lName').val()+" is accepting customers now!!"+br)
 				logging.appendFile('logs.txt',"\n"+getTimestamp(new Date)+"\nOperator "+snap.child('fName').val()+' '+snap.child('lName').val()+" is accepting customers now!"+br,(err)=>{
 					if(err) throw err
-				});
+				})
 		      appLogs()
 		   }
 		}
 	})
 	handleF.push(gn2);
+
+	handleG.forEach(gn3=>database.child('operators/'+snap.key+'/customers').off('child_removed',gn3))
+	let gn3=database.child('operators/'+snap.key+'/customers').on('child_removed',snapp=>{
+		activeOperators.deleteCustomer(snapp)
+		console.log(getTimestamp(new Date)+"\nOperator "+snap.child('fName').val()+' '+snap.child('lName').val()+" ended chat with a customer!!"+br)
+		logging.appendFile('logs.txt',"\n"+getTimestamp(new Date)+"\nOperator "+snap.child('fName').val()+' '+snap.child('lName').val()+" ended chat with a customer!"+br,(err)=>{
+			if(err) throw err
+		})
+		activeCustomers--
+		appLogs()
+	})
+	handleG.push(gn3)
 });
 handleA.push(fn);
 
