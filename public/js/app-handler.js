@@ -198,3 +198,15 @@ function pauseCustomers() {
 	else
 		firebase.database().ref('operators/'+document.getElementsByClassName('loggedProfile')[0].id+'/pause').set(false)
 }
+
+function eoc() {
+	alert("Ending conversation!")
+
+	firebase.database().ref('operators/'+document.getElementsByClassName('loggedProfile')[0].id+'/customers/'+document.getElementsByClassName('title')[0].id).set(null)
+
+	goBack('peopleDiv')
+
+	var cover = document.createElement("div")
+	cover.id = "cover"
+	document.getElementsByTagName('body')[0].appendChild(cover)
+}

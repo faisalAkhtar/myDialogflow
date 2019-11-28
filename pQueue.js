@@ -140,7 +140,7 @@ class PQueue {
       var Operator=null
       for (var i = 0; i < this.operators.length; i++) {
          for (var j = 0; j < this.operators[i].customers.length; j++) {
-            if(this.operators[i].customers[j].key==customer) {
+            if(this.operators[i].customers[j].child("id").val()==customer.child("id").val()) {
                Operator=this.operators[i]
                this.operators.splice(i,1)
                Operator.customers.splice(j,1)
