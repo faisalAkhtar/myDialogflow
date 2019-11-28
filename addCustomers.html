@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="author" content="Faisal Akhtar">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Faisal's App</title>
+  <link rel="icon" href="/static/img/favicon.ico">
+  <link rel="stylesheet" href="/static/css/login.css">
+
+  <script src="https://www.gstatic.com/firebasejs/live/3.1/firebase.js"></script>
+</head>
+
+<body>
+  <form name="addForm" method="POST">
+    <div>
+      <input type="text" name="id" placeholder="ID" autofocus>
+    </div>
+    <div>
+      <input type="text" name="fname" placeholder="First Name">
+    </div>
+    <div>
+      <input type="text" name="lname" placeholder="Last Name">
+    </div>
+    <div>
+      <button name="add">ADD</button>
+    </div>
+  </form>
+
+  <script>
+    (function() {
+      var firebaseConfig = {
+        apiKey: "AIzaSyDtS9Js6uGELqIN5ZaI4C8-FN45NQP3eXc",
+        authDomain: "operatorhandler.firebaseapp.com",
+        databaseURL: "https://operatorhandler.firebaseio.com",
+        projectId: "operatorhandler",
+        storageBucket: "operatorhandler.appspot.com"
+      };
+      firebase.initializeApp(firebaseConfig);
+      firebase.auth().onAuthStateChanged(firebaseUser => {
+        if(!firebaseUser) {
+          alert("Please login first!");
+          window.location.href = "/";
+        }
+      });
+    }());
+    document.forms["addForm"]["add"].addEventListener('click', e=> {
+      e.preventDefault();
+      var id = document.forms["addForm"]["id"].value;
+      var fname = document.forms["addForm"]["fname"].value;
+      var lname = document.forms["addForm"]["lname"].value;
+      if(id=="") {
+        alert("Please provide an ID")
+        document.forms["addForm"]["id"].focus()
+      } else if(fname=="") {
+        alert("Please provide an First Name")
+        document.forms["addForm"]["fname"].focus()
+      } else {
+        let c = firebase.database().ref().child('customers').push()
+        if(lname!="")
+          c.set({ id:id, fName:fname, lName:lname })
+        else
+          c.set({ id:id, fName:fname })
+        document.forms["addForm"].reset()
+        document.forms["addForm"]["id"].focus()
+        alert("Added one customer!")
+      }
+    });
+  </script>
+</body>
+</html>

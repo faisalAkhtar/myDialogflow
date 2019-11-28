@@ -189,6 +189,7 @@ app.use('/static', express.static(`${__dirname}/public`));
 app.get('/',(req,res)=>{res.sendFile(`${__dirname}/login.html`)})
 app.get('/operator',(req,res)=>{res.sendFile(`${__dirname}/operator.html`)})
 app.get('/admin',(req,res)=>{res.sendFile(`${__dirname}/admin.html`)})
+app.get('/add',(req,res)=>{res.sendFile(`${__dirname}/addCustomers.html`)})
 
 app.listen(6969,()=>{
 	console.log("\n"+getTimestamp(new Date)+"\nServer is live on port 6969*"+br)
